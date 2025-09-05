@@ -1,17 +1,17 @@
-=== ByteNFT Onramp Payment Gateway ===
-Contributors: ByteNFT Onramp
-Tags: woocommerce, payment gateway, fiat, ByteNFT Onramp
+=== ByteNFT Transak Payment Gateway ===
+Contributors: ByteNFT Transak
+Tags: woocommerce, payment gateway, fiat, ByteNFT Transak
 Requires at least: 5.0
 Tested up to: 6.8
 Stable tag: 1.0.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-The ByteNFT Onramp Payment Gateway plugin for WooCommerce 8.9+ allows you to accept fiat payments to sell products on your WooCommerce store.
+The ByteNFT Transak Payment Gateway plugin for WooCommerce 8.9+ allows you to accept fiat payments to sell products on your WooCommerce store.
 
 == Description ==
 
-This plugin integrates ByteNFT Onramp Payment Gateway with WooCommerce, enabling you to accept fiat payments. 
+This plugin integrates ByteNFT Transak Payment Gateway with WooCommerce, enabling you to accept fiat payments. 
 
 == Installation ==
 

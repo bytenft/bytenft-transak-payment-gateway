@@ -350,13 +350,30 @@ class BYTENFT_TRANSAK_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 	            'desc_tip'    => true,
 	        ],
 
-	        'description' => [
-	            'title'       => __('Description', 'bytenft-transak-payment-gateway'),
-	            'type'        => 'text',
-	            'description' => __('Provide a brief description of the payment option.', 'bytenft-transak-payment-gateway'),
-	            'default'     => __('Pay easily using Visa, Mastercard Debit, Apple Pay, or your Coinbase account...', 'bytenft-transak-payment-gateway'),
-	            'desc_tip'    => true,
-	        ],
+			'description' => [
+			    'title'       => __('Description', 'bytenft-transak-payment-gateway'),
+			    'type'        => 'textarea',
+			    'description' => __('Provide a brief description of the payment option.', 'bytenft-transak-payment-gateway'),
+			    'default'     => __(
+			        '<p style="margin:0 0 8px; font-weight:bold; font-size:14px;">Important Information about Your Purchase</p>
+
+			        <p style="margin:0 0 6px; font-weight:bold; font-size:13px;">NFT Information</p>
+			        <p style="margin:0 0 10px; font-size:13px;">
+			            You are completing your NFT purchase through <strong>ByteNFT</strong>.<br>
+			            For your order, an NFT will be minted, purchased, and then burned as part of the process.<br>
+			            Please note this is a <strong>digital purchase</strong> and is <strong>non-refundable</strong>.
+			        </p>
+
+			        <p style="margin:0 0 6px; font-weight:bold; font-size:13px;">Bank Statement Information</p>
+			        <p style="margin:0; font-size:13px;">
+			            On your bank or card statement, this transaction will appear as <em>“TRANSAK*BYTE”</em>.<br>
+			            Make sure you recognize this description to avoid confusion when reviewing your statement.
+			        </p>',
+			        'bytenft-transak-payment-gateway'
+			    ),
+			    'desc_tip'    => true,
+			],
+
 
 	         'instructions' => [
 	            'title'       => __('Instructions', 'bytenft-transak-payment-gateway'),
