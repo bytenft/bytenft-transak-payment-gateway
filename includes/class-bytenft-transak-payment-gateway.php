@@ -962,6 +962,15 @@ class BYTENFT_TRANSAK_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 		$amount = number_format($order->get_total(), 2, '.', '');
 
 		// Get billing address details
+		$email = sanitize_text_field($order->get_billing_email());
+		$phone = sanitize_text_field($order->get_billing_phone());
+
+		// Get billing country (ISO code like "US", "IN", etc.)
+		$country = $order->get_billing_country();
+
+		// Convert to country calling code
+		$country_code = WC()->countries->get_country_calling_code($country);
+
 		$billing_address_1 = sanitize_text_field($order->get_billing_address_1());
 		$billing_address_2 = sanitize_text_field($order->get_billing_address_2());
 		$billing_city = sanitize_text_field($order->get_billing_city());
@@ -1017,6 +1026,9 @@ class BYTENFT_TRANSAK_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 			'meta_data' => $meta_data_array,
 			'remarks' => 'Order ' . $order->get_order_number(),
 			// Add billing address details to the request
+			'email' => $email,
+			'phone' => $phone,
+			'country_code' => $country_code,
 			'billing_address_1' => $billing_address_1,
 			'billing_address_2' => $billing_address_2,
 			'billing_city' => $billing_city,
