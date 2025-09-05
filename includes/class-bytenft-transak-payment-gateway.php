@@ -82,7 +82,7 @@ class BYTENFT_TRANSAK_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 
 		add_action('woocommerce_admin_order_data_after_order_details', [$this, 'bnfttransak_display_test_order_tag']);
 		add_filter('woocommerce_admin_order_preview_line_items', [$this, 'bnfttransak_add_custom_label_to_order_row'], 10, 2);
-		add_filter('woocommerce_available_payment_gateways', [$this, 'hide_custom_payment_gateway_conditionally']);
+		add_filter('woocommerce_available_payment_gateways', [$this, 'bnft_transak_hide_custom_payment_gateway_conditionally']);
 	}
 
 	/**
@@ -790,6 +790,20 @@ class BYTENFT_TRANSAK_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 
 			$response_data = json_decode(wp_remote_retrieve_body($response), true);
 
+			wc_get_logger()->info(
+			    'Payment API raw response',
+			    [
+			        'source'  => 'bytenft-transak-payment-gateway',
+			        'context' => [
+						'url'=>$url,
+			            'order_id' => $order_id,
+			            'response' => wp_remote_retrieve_body($response), // raw
+			            'parsed'   => $response_data, // parsed array
+			        ],
+			    ]
+			);
+
+
 			if (!empty($response_data['status']) && $response_data['status'] === 'success' && !empty($response_data['data']['payment_link'])) {
 				if ($last_failed_account) {
 					wc_get_logger()->info("Sending email before returning success to: '{$last_failed_account['title']}'", ['source' => 'bytenft-transak-payment-gateway']);
@@ -1027,7 +1041,7 @@ class BYTENFT_TRANSAK_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 			'remarks' => 'Order ' . $order->get_order_number(),
 			// Add billing address details to the request
 			'email' => $email,
-			'phone' => $phone,
+			'phone_number' => $phone,
 			'country_code' => $country_code,
 			'billing_address_1' => $billing_address_1,
 			'billing_address_2' => $billing_address_2,
@@ -1216,7 +1230,7 @@ class BYTENFT_TRANSAK_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 		]);
 	}
 
-	public function hide_custom_payment_gateway_conditionally($available_gateways)
+	public function bnft_transak_hide_custom_payment_gateway_conditionally($available_gateways)
 	{
 		$gateway_id = $this->id;
 
