@@ -976,7 +976,8 @@ class BYTENFT_TRANSAK_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 		$amount = number_format($order->get_total(), 2, '.', '');
 
 		// Get billing address details
-		$email = sanitize_text_field($order->get_billing_email());
+		// $email = sanitize_text_field($order->get_billing_email());
+		$email = WC()->checkout()->get_value('billing_email');
 		$phone = sanitize_text_field($order->get_billing_phone());
 
 		// Get billing country (ISO code like "US", "IN", etc.)
