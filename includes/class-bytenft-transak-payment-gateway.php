@@ -763,7 +763,7 @@ class BYTENFT_TRANSAK_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 			wc_get_logger()->info("Sending payment request using account '{$account['title']}'", $logger_context);
 			$apiPath = '/api/request-payment';
 			$url = esc_url($this->base_url . $apiPath);
-			echo '<pre>'; print_r($data); die;
+
 			$order->update_meta_data('_order_origin', 'bnfttransak_payment_gateway');
 			$order->save();
 
