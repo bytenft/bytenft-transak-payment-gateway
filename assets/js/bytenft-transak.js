@@ -66,6 +66,8 @@ jQuery(function ($) {
 		e.preventDefault();
 		var $form = $(this);
 
+		preparePopup(); // 👈 Important: open blank popup in gesture
+
 		if (isSubmitting) {
 			console.warn("Checkout already submitting...");
 			return false;
@@ -110,19 +112,39 @@ jQuery(function ($) {
 	    return /iP(ad|hone|od)/.test(navigator.userAgent);
 	}
 
+	let popupWindow = null;
+
+	function preparePopup() {
+	    if (isIOS() && !popupWindow) {
+	        // Open blank popup immediately on click
+	        popupWindow = window.open('about:blank', '_blank');
+	    }
+	}
+
 	function openPaymentLink(paymentLink) {
 	    var sanitizedPaymentLink = paymentLink;
 	    var width = 700, height = 700;
 	    var left = window.innerWidth / 2 - width / 2;
 	    var top = window.innerHeight / 2 - height / 2;
 
-	     // Directly open final payment link (works for iOS & desktop)
-	    popupWindow = window.open(
-	        sanitizedPaymentLink,
-	        'paymentPopup',
-	        'width=' + width + ',height=' + height +
-	        ',scrollbars=yes,resizable=yes,top=' + top + ',left=' + left
-	    );
+	     if (isIOS()) {
+	        // reuse reserved popup if available, else open now
+	        if (popupWindow && !popupWindow.closed) {
+	            popupWindow.location.href = sanitizedPaymentLink;
+	        } else {
+	            popupWindow = window.open('about:blank', '_blank');
+	            if (popupWindow) {
+	                popupWindow.location.href = sanitizedPaymentLink;
+	            }
+	        }
+	    } else {
+	        popupWindow = window.open(
+	            sanitizedPaymentLink,
+	            'paymentPopup',
+	            'width=' + width + ',height=' + height +
+	            ',scrollbars=yes,resizable=yes,top=' + top + ',left=' + left
+	        );
+	    }
 
 	    if (!popupWindow || popupWindow.closed || typeof popupWindow.closed === 'undefined') {
 	        // Fallback if blocked
