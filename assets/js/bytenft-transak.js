@@ -106,94 +106,98 @@ jQuery(function ($) {
 		return false;
 	}
 
-	function openPaymentLink(paymentLink) {
-		var sanitizedPaymentLink = encodeURI(paymentLink);
-		var width = 700;
-		var height = 700;
-		var left = window.innerWidth / 2 - width / 2;
-		var top = window.innerHeight / 2 - height / 2;
-		var popupWindow = window.open(
-			sanitizedPaymentLink,
-			'paymentPopup',
-			'width=' + width + ',height=' + height + ',scrollbars=yes,top=' + top + ',left=' + left
-		);
-
-		if (!popupWindow || popupWindow.closed || typeof popupWindow.closed === 'undefined') {
-			let popup;
-			if (window.innerWidth <= 768) { // mobile breakpoint
-				popup = window.open(sanitizedPaymentLink, '_blank');
-			} else {
-				popup = window.open(
-					sanitizedPaymentLink,
-					'paymentPopup',
-					'width=600,height=700,scrollbars=yes,resizable=yes'
-				);
-			}
-			resetButton();
-		} else {
-			popupInterval = setInterval(function () {
-				if (popupWindow.closed) {
-					clearInterval(popupInterval);
-					clearInterval(paymentStatusInterval);
-					isPollingActive = false;
-
-					$.ajax({
-						type: 'POST',
-						url: bnfttransak_params.ajax_url,
-						data: {
-							action: 'bnfttransak_popup_closed_event',
-							order_id: orderId,
-							security: bnfttransak_params.bnfttransak_nonce,
-						},
-						dataType: 'json',
-						success: function (response) {
-							if (response.success && response.data.redirect_url) {
-								window.location.href = response.data.redirect_url;
-							}
-						},
-						complete: function () {
-							resetButton();
-						}
-					});
-				}
-			}, 500);
-
-			if (!isPollingActive) {
-				isPollingActive = true;
-				paymentStatusInterval = setInterval(function () {
-					$.ajax({
-						type: 'POST',
-						url: bnfttransak_params.ajax_url,
-						data: {
-							action: 'bnfttransak_check_payment_status',
-							order_id: orderId,
-							security: bnfttransak_params.bnfttransak_nonce,
-						},
-						dataType: 'json',
-						success: function (statusResponse) {
-							if (['success', 'failed', 'cancelled'].includes(statusResponse.data.status)) {
-								clearInterval(paymentStatusInterval);
-								clearInterval(popupInterval);
-								isPollingActive = false;
-
-								try {
-									if (popupWindow && !popupWindow.closed) {
-										popupWindow.close();
-									}
-								} catch (e) {
-									console.warn('Unable to close popup window:', e);
-								}
-
-								if (statusResponse.data.redirect_url) {
-									window.location.href = statusResponse.data.redirect_url;
-								}
-							}
-						}
-					});
-				}, 5000);
-			}
-		}
+	function isIOS() {
+	    return /iP(ad|hone|od)/.test(navigator.userAgent);
 	}
+
+	function openPaymentLink(paymentLink) {
+	    var sanitizedPaymentLink = paymentLink;
+	    var width = 700, height = 700;
+	    var left = window.innerWidth / 2 - width / 2;
+	    var top = window.innerHeight / 2 - height / 2;
+
+	    let popupWindow = window.open(
+	        sanitizedPaymentLink,
+	        isIOS() ? '_blank' : 'paymentPopup',
+	        'width=' + width + ',height=' + height + ',scrollbars=yes,resizable=yes,top=' + top + ',left=' + left
+	    );
+
+	    if (!popupWindow || popupWindow.closed || typeof popupWindow.closed === 'undefined') {
+	        // Fallback if blocked
+	        window.open(sanitizedPaymentLink, '_blank');
+	        resetButton();
+	        return;
+	    }
+
+	    // ✅ Polling for payment status (common for all)
+	    if (!isPollingActive) {
+	        isPollingActive = true;
+	        paymentStatusInterval = setInterval(function () {
+	            $.ajax({
+	                type: 'POST',
+	                url: bnfttransak_params.ajax_url,
+	                data: {
+	                    action: 'bnfttransak_check_payment_status',
+	                    order_id: orderId,
+	                    security: bnfttransak_params.bnfttransak_nonce,
+	                },
+	                dataType: 'json',
+	                success: function (statusResponse) {
+	                    if (['success', 'failed', 'cancelled'].includes(statusResponse.data.status)) {
+	                        clearInterval(paymentStatusInterval);
+	                        clearInterval(popupInterval);
+	                        isPollingActive = false;
+
+	                        try {
+	                            if (popupWindow && !popupWindow.closed) {
+	                                popupWindow.close(); // won’t close iOS tab, but safe
+	                            }
+	                        } catch (e) {
+	                            console.warn('Unable to close popup window:', e);
+	                        }
+
+	                        if (statusResponse.data.redirect_url) {
+	                            window.location.href = statusResponse.data.redirect_url;
+	                        }
+	                    }
+	                }
+	            });
+	        }, 5000);
+	    }
+
+	    // ✅ Popup/tab close event (try for all, works on desktop, partial on iOS)
+	    popupInterval = setInterval(function () {
+	        try {
+	            if (popupWindow.closed) {
+	                clearInterval(popupInterval);
+	                clearInterval(paymentStatusInterval);
+	                isPollingActive = false;
+
+	                $.ajax({
+	                    type: 'POST',
+	                    url: bnfttransak_params.ajax_url,
+	                    data: {
+	                        action: 'bnfttransak_popup_closed_event',
+	                        order_id: orderId,
+	                        security: bnfttransak_params.bnfttransak_nonce,
+	                    },
+	                    dataType: 'json',
+	                    success: function (response) {
+	                        if (response.success && response.data.redirect_url) {
+	                            window.location.href = response.data.redirect_url;
+	                        }
+	                    },
+	                    complete: function () {
+	                        resetButton();
+	                    }
+	                });
+	            }
+	        } catch (e) {
+	            console.warn('Popup check failed:', e);
+	        }
+	    }, 500);
+	}
+
 
 	function handleResponse(response, $form) {
 		$('.bnfttransak-loader-background, .bnfttransak-loader').hide();
