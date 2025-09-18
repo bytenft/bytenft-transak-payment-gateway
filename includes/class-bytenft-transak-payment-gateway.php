@@ -346,7 +346,7 @@ class BYTENFT_TRANSAK_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 	            'title'       => __('Title', 'bytenft-transak-payment-gateway'),
 	            'type'        => 'text',
 	            'description' => __('This controls the title which the user sees during checkout.', 'bytenft-transak-payment-gateway'),
-	            'default'     => __('Pay with Debit Cards (Visa, Mastercard, or Apple Pay)', 'bytenft-transak-payment-gateway'),
+	            'default'     => __('Pay with ByteNFT (Credit Cards, Apple Pay & Google Pay)', 'bytenft-transak-payment-gateway'),
 	            'desc_tip'    => true,
 	        ],
 
