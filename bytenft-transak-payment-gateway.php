@@ -7,7 +7,7 @@
  * Author URI: https://pay.bytenft.xyz/
  * Text Domain: bytenft-transak-payment-gateway
  * Plugin URI: https://github.com/bytenft/bytenft-transak-payment-gateway
- * Version: 1.0.0
+ * Version: 1.0.1
  * License: GPLv3 or later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  *
