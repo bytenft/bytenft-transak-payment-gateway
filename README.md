@@ -8,7 +8,7 @@ The ByteNFT Transak Payment Gateway plugin for WooCommerce 8.9+ allows you to ac
 **Tags:** woocommerce, payment gateway, fiat, ByteNFT Transak  
 **Requires at least:** 6.2  
 **Tested up to:** 6.7  
-**Stable tag:** 1.0.0  
+**Stable tag:** 1.0.1
 **License:** GPLv3 or later  
 **License URI:** [GPLv3 License](https://www.gnu.org/licenses/gpl-3.0.html)
 
@@ -141,6 +141,11 @@ For any issues or enhancement requests with this plugin, please contact the Byte
 The official documentation for this plugin is available at: [https://pay.bytenft.xyz/api/docs/wordpress-plugin](https://pay.bytenft.xyz/api/docs/wordpress-plugin)
 
 ## Changelog
+
+### Version 1.0.1
+
+- **Updated Default Title:** Adjusted the default plugin title for improved clarity.
+- **IOS Payment Link Fix:** Resolved an issue where payment links were not functioning correctly on iOS devices.
 
 ### Version 1.0.0 (Initial Release)
 

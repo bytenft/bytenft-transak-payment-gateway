@@ -3,7 +3,7 @@ Contributors: ByteNFT Transak
 Tags: woocommerce, payment gateway, fiat, ByteNFT Transak
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -27,10 +27,17 @@ Visit the DFin website and log in to your account. Navigate to Developer Setting
 
 == Changelog ==
 
+= 1.0.1 =
+* Adjusted the default plugin title for improved clarity.
+* Resolved an issue where payment links were not functioning correctly on iOS devices.
+
 = 1.0.0 =
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+* This update refines the default plugin title and resolves iOS payment link issues to ensure smoother checkout experiences.
 
 = 1.0.0 =
 Initial release.
