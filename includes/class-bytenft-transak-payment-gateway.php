@@ -978,6 +978,7 @@ class BYTENFT_TRANSAK_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 		// Get billing address details
 		$email = sanitize_text_field($order->get_billing_email());
 		$phone = sanitize_text_field($order->get_billing_phone());
+	    $curr_code   = sanitize_text_field($order->get_currency()); // ✅ Currency code (e.g., USD, INR)
 
 		// Get billing country (ISO code like "US", "IN", etc.)
 		$country = $order->get_billing_country();
@@ -1050,6 +1051,7 @@ class BYTENFT_TRANSAK_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 			'billing_country' => $billing_country,
 			'billing_state' => $billing_state,
 			'is_sandbox' => $is_sandbox,
+			'curr_code' => $curr_code,
 		];
 	}
 
